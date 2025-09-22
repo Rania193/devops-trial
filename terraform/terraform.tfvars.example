@@ -1,0 +1,5 @@
+project       = "fastapi-test"
+ecr_account   = "123456789012"   # AWS Account ID
+vpc_id        = "vpc-xxxxxx"
+public_subnets  = ["subnet-aaa", "subnet-bbb"]
+private_subnets = ["subnet-ccc", "subnet-ddd"]
