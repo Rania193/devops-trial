@@ -36,7 +36,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
-          echo "IMAGE_TAG=$(echo "${{ github.sha }}" | tr -d '\n' | tr -d '\r')" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
           echo "IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_ENV
       # TODO: Candidate should know task family names come from Terraform/ECS setup.
 
