@@ -1,0 +1,91 @@
+name: Deploy to AWS (Staging)
+
+on:
+  push:
+    branches:
+      - main   # Deploy when pushing to main branch
+
+env:
+  AWS_REGION: eu-west-1
+  ECR_REPOSITORY: devops-trial-fastapi-app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      # TODO: Candidate must understand that credentials come from GitHub Secrets.
+
+      # Step 3: Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      # TODO: Candidate should know this step authenticates Docker with ECR.
+
+      # Step 4: Set pipeline environment variables
+      - name: Set environment variables
+        run: |
+          echo "ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+          echo "IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_ENV
+      # TODO: Candidate should know task family names come from Terraform/ECS setup.
+
+      # Step 5: Build and push Docker image
+      - name: Build and push Docker image
+        run: |
+          # TODO: Build Docker image for the app
+          # (hint: docker build)
+          docker build -t $ECR_REPOSITORY:latest -t $ECR_REPOSITORY:$IMAGE_TAG .
+
+          # TODO: Tag the image with ECR repo and commit SHA
+          # (hint: docker tag)
+          docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          # TODO: Push image to ECR
+          # (hint: docker push)
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+
+
+      ########################################################################
+      # NOTE:
+      #   The original skeleton expected the pipeline to manually fetch the
+      #   current ECS task definition JSON, edit the container image with jq,
+      #   and call aws ecs register-task-definition & aws ecs update-service.
+      #   I eplaced that approach with Terraform.  Terraform will be the
+      #   single source of truth for the ECS service and task definition.
+      #   This avoids configuration drift and gives plan/apply previews.
+      ########################################################################
+      
+      # Step 6: Deploy infrastructure & update ECS service using Terraform
+      - name: Terraform Init
+        run: |
+          working-directory: terraform
+          run: terraform init
+      - name: Terraform Plan
+        working-directory: infra
+        env:
+          TF_VAR_image_tag: ${{ env.IMAGE_TAG }}
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: infra
+        env:
+          TF_VAR_image_tag: ${{ env.IMAGE_TAG }}
+        run: terraform apply -auto-approve tfplan
+
+      # Step 7: Show the ALB DNS name
+      - name: Show ALB DNS
+        working-directory: infra
+        run: terraform output alb_dns_name
