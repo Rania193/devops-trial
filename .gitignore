@@ -1,4 +1,3 @@
 test_accessKeys.csv
 .terraform*
-*.tfstate
 *.tfstate.*

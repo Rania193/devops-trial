@@ -65,6 +65,9 @@ jobs:
       #   I eplaced that approach with Terraform.  Terraform will be the
       #   single source of truth for the ECS service and task definition.
       #   This avoids configuration drift and gives plan/apply previews.
+      #   on the downside, i had to upload the terraform.tfstate to the repo,
+      #   which is a not best practice. But in production env we would have remote
+      #   state stored in S3. 
       ########################################################################
       
       # Step 6: Deploy infrastructure & update ECS service using Terraform
