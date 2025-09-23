@@ -1,5 +1,9 @@
 # DevOps Trail — FastAPI on AWS ECS
 
+## Some changes I made: 
+The original skeleton expected the pipeline to manually fetch the current ECS task definition JSON, edit the container image with jq, and call aws ecs register-task-definition & aws ecs update-service.
+I replaced that approach with Terraform.  Terraform will be the single source of truth for the ECS service and task definition.
+This avoids configuration drift and gives plan/apply previews. On the downside, i had to upload the terraform.tfstate to the repo, which is not a best practice for sure and is a security hazard. But in production env we would have remote state stored in S3.
 ## Your Tasks
 1. **Dockerize & Run Locally**
    - Verify you can build and run the FastAPI app locally with Docker.
