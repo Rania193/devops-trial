@@ -78,19 +78,19 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: infra
+        working-directory: terraform
         env:
           TF_VAR_image_tag: ${{ env.IMAGE_TAG }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        working-directory: infra
+        working-directory: terraform
         env:
           TF_VAR_image_tag: ${{ env.IMAGE_TAG }}
         run: terraform apply -auto-approve tfplan
 
       # Step 7: Show the ALB DNS name
       - name: Show ALB DNS
-        working-directory: infra
+        working-directory: terraform
         run: terraform output alb_dns_name
