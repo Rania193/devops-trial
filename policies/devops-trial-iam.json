@@ -21,7 +21,7 @@
                 "ecr:CreateRepository",
                 "ecr:DeleteRepository"
             ],
-            "Resource": "arn:aws:ecr:us-east-1:311141537104:repository/devops-trial-*"
+            "Resource": "arn:aws:ecr:eu-west-1:908774804482:repository/devops-trial-*"
         },
         {
             "Effect": "Allow",
@@ -37,9 +37,9 @@
                 "ecs:List*"
             ],
             "Resource": [
-                "arn:aws:ecs:us-east-1:311141537104:cluster/devops-trial-*",
-                "arn:aws:ecs:us-east-1:311141537104:task-definition/devops-trial-*:*",
-                "arn:aws:ecs:us-east-1:311141537104:service/devops-trial-*/*"
+                "arn:aws:ecs:eu-west-1:908774804482:cluster/devops-trial-*",
+                "arn:aws:ecs:eu-west-1:908774804482:task-definition/devops-trial-*:*",
+                "arn:aws:ecs:eu-west-1:908774804482:service/devops-trial-*/*"
             ]
         },
         {
@@ -72,7 +72,7 @@
                 "logs:DescribeLogGroups",
                 "logs:DescribeLogStreams"
             ],
-            "Resource": "arn:aws:logs:us-east-1:311141537104:log-group:/ecs/devops-trial-*"
+            "Resource": "arn:aws:logs:eu-west-1:908774804482:log-group:/ecs/devops-trial-*"
         },
         {
             "Effect": "Allow",
@@ -83,7 +83,7 @@
                 "cloudwatch:GetMetricStatistics",
                 "cloudwatch:ListMetrics"
             ],
-            "Resource": "arn:aws:cloudwatch:us-east-1:311141537104:alarm:devops-trial-*"
+            "Resource": "arn:aws:cloudwatch:eu-west-1:908774804482:alarm:devops-trial-*"
         },
         {
             "Effect": "Allow",
@@ -132,12 +132,12 @@
                 "iam:ListAttachedRolePolicies",
                 "iam:TagRole"
             ],
-            "Resource": "arn:aws:iam::311141537104:role/devops-trial-*"
+            "Resource": "arn:aws:iam::908774804482:role/devops-trial-*"
         },
         {
             "Effect": "Allow",
             "Action": "iam:PassRole",
-            "Resource": "arn:aws:iam::311141537104:role/devops-trial-*"
+            "Resource": "arn:aws:iam::908774804482:role/devops-trial-*"
         }
     ]
 }
