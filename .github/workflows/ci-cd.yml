@@ -45,7 +45,7 @@ jobs:
         run: |
           # TODO: Build Docker image for the app
           # (hint: docker build)
-          docker build -t $ECR_REPOSITORY:latest -t $ECR_REPOSITORY:$IMAGE_TAG app/Dockerfile
+          docker build -t $ECR_REPOSITORY:latest -t $ECR_REPOSITORY:$IMAGE_TAG app
 
           # TODO: Tag the image with ECR repo and commit SHA
           # (hint: docker tag)
