@@ -69,9 +69,9 @@ jobs:
       
       # Step 6: Deploy infrastructure & update ECS service using Terraform
       - name: Terraform Init
-        run: |
-          working-directory: terraform
-          run: terraform init
+        working-directory: terraform
+        run: terraform init
+        
       - name: Terraform Plan
         working-directory: infra
         env:
